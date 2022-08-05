@@ -19,4 +19,9 @@ public class Location implements Serializable {
     private int driverID;
     private double longitude;
     private double latitude;
+
+    public Location(double longitude, double latitude){
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 }
