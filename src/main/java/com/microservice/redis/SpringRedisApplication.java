@@ -1,8 +1,6 @@
 package com.microservice.redis;
 
-import com.microservice.redis.dao.ClientResponse;
-import com.microservice.redis.dao.ClientRequest;
-import com.microservice.redis.dao.DriverRequest;
+import com.microservice.redis.dao.*;
 import com.microservice.redis.respository.LocationDAO;
 import com.microservice.redis.service.RestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,11 @@ public class SpringRedisApplication extends SpringBootServletInitializer {
     @PostMapping("/client")
     public ResponseEntity<Object> getDriverFromUser(@RequestBody ClientRequest clientRequest){
          return locationDAO.getDriverFromUser(clientRequest);
+    }
+
+    @PostMapping("/booking")
+    public ResponseEntity<Message> saveBooking(@RequestBody BookingRequest bookingRequest){
+        return locationDAO.saveBooking(bookingRequest);
     }
 
     @Override

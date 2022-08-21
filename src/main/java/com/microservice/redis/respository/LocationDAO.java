@@ -1,18 +1,17 @@
 package com.microservice.redis.respository;
 
-import com.microservice.redis.dao.ClientResponse;
-import com.microservice.redis.dao.DriverResponse;
-import com.microservice.redis.dao.LocationClient;
-import com.microservice.redis.dao.ClientRequest;
-import com.microservice.redis.dao.DriverRequest;
-import com.microservice.redis.dao.Message;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microservice.redis.dao.*;
 import com.microservice.redis.utils.JWTUtils;
+import com.microservice.redis.utils.RedisPubSub;
 import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +28,9 @@ public class LocationDAO {
 
     @Autowired
     RedissonClient redissonClient;
+
+    @Autowired
+    RedisPubSub redisPubSub;
 
     public ClientResponse save(DriverRequest location){
         ClientResponse clientDAO = null;
@@ -96,6 +98,26 @@ public class LocationDAO {
 
     private RMap<Integer, DriverRequest> getDriverIDIsOnline(){
         return redissonClient.getMapCache(HASH_KEY_1);
+    }
+
+    public ResponseEntity<Message> saveBooking(BookingRequest bookingRequest){
+        ObjectMapper objectMapper = new ObjectMapper();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String jsonMessage = null;
+        String jsonBooking = null;
+        try {
+            jsonBooking = objectMapper.writeValueAsString(bookingRequest);
+            MessagePublish messagePublish = new MessagePublish(bookingRequest.getPhoneNumber(), jsonBooking, timestamp.getTime());
+            jsonMessage = objectMapper.writeValueAsString(messagePublish);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if(jsonBooking!=null&&jsonMessage!=null){
+            redisPubSub.publish("user_history", jsonMessage);
+            return new ResponseEntity<>(new Message("SUCCESS"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new Message("FAILURE"), HttpStatus.OK);
+
     }
 
 }
