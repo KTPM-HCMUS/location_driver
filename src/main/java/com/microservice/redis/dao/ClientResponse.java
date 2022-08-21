@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ClientDAO {
+public class ClientResponse {
     private String phoneNumber; // userID
     private String name;
     private LocationClient locationClient;

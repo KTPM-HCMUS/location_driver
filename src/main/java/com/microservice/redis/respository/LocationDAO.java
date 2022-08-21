@@ -1,7 +1,7 @@
 package com.microservice.redis.respository;
 
-import com.microservice.redis.dao.ClientDAO;
-import com.microservice.redis.dao.DriverDAO;
+import com.microservice.redis.dao.ClientResponse;
+import com.microservice.redis.dao.DriverResponse;
 import com.microservice.redis.dao.LocationClient;
 import com.microservice.redis.dao.ClientRequest;
 import com.microservice.redis.dao.DriverRequest;
@@ -30,8 +30,8 @@ public class LocationDAO {
     @Autowired
     RedissonClient redissonClient;
 
-    public ClientDAO save(DriverRequest location){
-        ClientDAO clientDAO = null;
+    public ClientResponse save(DriverRequest location){
+        ClientResponse clientDAO = null;
         RMapCache<String, DriverRequest> map = redissonClient.getMapCache(HASH_KEY_1);
         RGeo<String> geo = redissonClient.getGeo(HASH_KEY_2);
         RMap<String, ClientRequest> map1 = redissonClient.getMap(HASH_KEY_REQUEST_CLIENT);
@@ -85,7 +85,7 @@ public class LocationDAO {
         RMap<String, ClientRequest> map = redissonClient.getMap(HASH_KEY_REQUEST_CLIENT);
         //process
         DriverRequest driverRequest = getDriverNearest(clientRequest);
-        DriverDAO driverDAO = null;
+        DriverResponse driverDAO = null;
         if(driverRequest!=null){
             driverDAO = JWTUtils.parseTokenToGetDriver(driverRequest.getToken(), driverRequest.getLongitude(), driverRequest.getLatitude());
             map.putIfAbsent(driverRequest.getDriverID(), clientRequest);

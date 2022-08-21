@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DriverDAO {
+public class DriverResponse {
     private String userId;
     private String name;
     private String vehiclePlate;
