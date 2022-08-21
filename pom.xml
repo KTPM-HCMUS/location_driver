@@ -40,6 +40,18 @@
             <artifactId>redisson</artifactId>
             <version>3.13.6</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.vaadin.external.google</groupId>-->
+<!--            <artifactId>android-json</artifactId>-->
+<!--            <version>0.0.20131108.vaadin1</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -71,7 +83,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><source>8</source><target>8</target></configuration></plugin>
         </plugins>
     </build>
 </project>
