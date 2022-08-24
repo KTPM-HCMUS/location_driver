@@ -8,7 +8,7 @@ public class LogRequest {
     private String requestData;
     private String responseDate;
     private String responseData;
-    private String processTime;
+    private long processTime;
     private String requestId;
 
     public LogRequest(){
@@ -19,11 +19,11 @@ public class LogRequest {
         this.requestData = "";
         this.responseDate = "";
         this.responseData = "";
-        this.processTime = "";
+        this.processTime = 0;
         this.requestId = "";
     }
 
-    public LogRequest(String id, String uri, String method, String requestDate, String requestData, String responseDate, String responseData, String processTime, String requestId) {
+    public LogRequest(String id, String uri, String method, String requestDate, String requestData, String responseDate, String responseData, long processTime, String requestId) {
         this.id = id;
         this.uri = uri;
         this.method = method;
@@ -32,14 +32,6 @@ public class LogRequest {
         this.responseDate = responseDate;
         this.responseData = responseData;
         this.processTime = processTime;
-        this.requestId = requestId;
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
 
@@ -99,11 +91,19 @@ public class LogRequest {
         this.responseData = responseData;
     }
 
-    public String getProcessTime() {
+    public long getProcessTime() {
         return processTime;
     }
 
-    public void setProcessTime(String processTime) {
+    public void setProcessTime(long processTime) {
         this.processTime = processTime;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }
