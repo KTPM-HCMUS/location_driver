@@ -3,6 +3,7 @@ package com.microservice.redis.respository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microservice.redis.dao.*;
+import com.microservice.redis.service.RestService;
 import com.microservice.redis.utils.JWTUtils;
 import com.microservice.redis.utils.RedisPubSub;
 import org.redisson.api.*;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -100,14 +102,14 @@ public class LocationDAO {
         return redissonClient.getMapCache(HASH_KEY_1);
     }
 
-    public ResponseEntity<Message> saveBooking(BookingRequest bookingRequest){
+    public ResponseEntity<Message> saveBooking(BookingItem bookingRequest){
         ObjectMapper objectMapper = new ObjectMapper();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String jsonMessage = null;
         String jsonBooking = null;
         try {
             jsonBooking = objectMapper.writeValueAsString(bookingRequest);
-            MessagePublish messagePublish = new MessagePublish(bookingRequest.getPhoneNumber(), jsonBooking, timestamp.getTime());
+            MessagePublish messagePublish = new MessagePublish(bookingRequest.getUserId(), jsonBooking, timestamp.getTime());
             jsonMessage = objectMapper.writeValueAsString(messagePublish);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -120,4 +122,17 @@ public class LocationDAO {
 
     }
 
+    public ResponseEntity<BookingList> getAllBooking(String token){
+        RestTemplate restTemplate = new RestTemplate();
+        RestService restService = new RestService(restTemplate);
+        BookingList bookingList = restService.getAll(token);
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<Double>> getTotal(String token) {
+        RestTemplate restTemplate = new RestTemplate();
+        RestService restService = new RestService(restTemplate);
+        List<Double> list = restService.getTotal(token);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
 }

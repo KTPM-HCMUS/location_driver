@@ -2,46 +2,21 @@ package com.microservice.redis;
 
 import com.microservice.redis.dao.*;
 import com.microservice.redis.respository.LocationDAO;
-import com.microservice.redis.service.RestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
-@RestController
-@RequestMapping("api/v1/location")
 public class SpringRedisApplication extends SpringBootServletInitializer {
-    @Autowired
-    private LocationDAO locationDAO;
-
-    @PostMapping
-    public ClientResponse save(@RequestBody DriverRequest location){
-        return locationDAO.save(location);
-    }
-
-    @GetMapping("/all")
-    public ArrayList<DriverRequest> getAllMembers(){
-        return locationDAO.getAllDriverIsOnline();
-    }
-
-
-    @PostMapping("/client")
-    public ResponseEntity<Object> getDriverFromUser(@RequestBody ClientRequest clientRequest){
-         return locationDAO.getDriverFromUser(clientRequest);
-    }
-
-    @PostMapping("/booking")
-    public ResponseEntity<Message> saveBooking(@RequestBody BookingRequest bookingRequest){
-        return locationDAO.saveBooking(bookingRequest);
-    }
-
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application){
         return application.sources(SpringRedisApplication.class);
